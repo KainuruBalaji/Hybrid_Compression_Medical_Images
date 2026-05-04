@@ -1,21 +1,10 @@
-"""Module 3: Otsu Thresholding — find optimal entropy threshold for ROI/Non-ROI split."""
+
 
 import numpy as np
 
 
 def otsu_threshold(values: np.ndarray, bins: int = 256) -> float:
-    """Compute Otsu's threshold over block entropy values.
-
-    Maximizes between-class variance:
-        σ²_B(T) = w₀(T) · w₁(T) · [μ₀(T) - μ₁(T)]²
-
-    where:
-        w₀, w₁ = class weights (fraction of blocks in each class)
-        μ₀, μ₁ = class means
-
-    Blocks with entropy > threshold → ROI (high detail)
-    Blocks with entropy ≤ threshold → Non-ROI (smooth)
-    """
+    # Calculates Otsu's optimal threshold over block entropy values to separate ROI from Non-ROI.
     if values.size == 0:
         return 0.0
 

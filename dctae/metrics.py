@@ -1,4 +1,4 @@
-"""Module 6: Evaluation Metrics — PSNR, SSIM, CR, SS, BPP."""
+
 
 from typing import Dict
 
@@ -13,13 +13,7 @@ except ImportError:
 
 
 def compute_psnr(original: np.ndarray, reconstructed: np.ndarray) -> float:
-    """Peak Signal-to-Noise Ratio.
-
-    PSNR = 20 · log₁₀(MAX / √MSE)
-
-    Higher PSNR → better reconstruction quality.
-    Typical values: 25–40 dB for lossy compression.
-    """
+    # Computes the Peak Signal-to-Noise Ratio (PSNR) between the original and reconstructed images.
     if SKIMAGE_AVAILABLE:
         return float(peak_signal_noise_ratio(original, reconstructed, data_range=255))
 
@@ -30,12 +24,7 @@ def compute_psnr(original: np.ndarray, reconstructed: np.ndarray) -> float:
 
 
 def compute_ssim(original: np.ndarray, reconstructed: np.ndarray) -> float:
-    """Structural Similarity Index Measure.
-
-    SSIM = (2μ₁μ₂ + C₁)(2σ₁₂ + C₂) / ((μ₁² + μ₂² + C₁)(σ₁² + σ₂² + C₂))
-
-    Range: [-1, 1]. Higher → more perceptually similar.
-    """
+    # Computes the Structural Similarity Index Measure (SSIM) between the images.
     if SKIMAGE_AVAILABLE:
         return float(structural_similarity(original, reconstructed, data_range=255))
 
@@ -70,13 +59,7 @@ def compute_compression_ratio(
     latent_size: int,
     num_blocks: int,
 ) -> float:
-    """Compression Ratio: original_bits / compressed_bits.
-
-    Compressed bits include:
-        - ROI: non-zero quantized DCT coefficients × 16 bits each
-        - Non-ROI: quantized latent codes × 8 bits each
-        - Overhead: 1 bit per block for ROI/Non-ROI flag
-    """
+    # Calculates the compression ratio (original size divided by compressed size).
     original_bits = original_size * 8
     roi_bits = max(1, dct_nonzero_count) * 16
     non_roi_bits = max(1, latent_size) * 8
@@ -86,12 +69,7 @@ def compute_compression_ratio(
 
 
 def compute_space_saving(compression_ratio: float) -> float:
-    """Space Saving percentage.
-
-    SS = (1 - 1/CR) × 100
-
-    E.g., CR=4.0 → SS=75% (75% of storage saved)
-    """
+    # Calculates the space saving percentage based on the compression ratio.
     if compression_ratio <= 0:
         return 0.0
     return (1.0 - 1.0 / compression_ratio) * 100.0
@@ -103,14 +81,7 @@ def compute_bpp(
     latent_size: int,
     num_blocks: int,
 ) -> float:
-    """Bits Per Pixel — average number of bits used per pixel after compression.
-
-    BPP = compressed_bits / total_pixels
-
-    Lower BPP → better compression.
-    Uncompressed grayscale = 8.0 BPP.
-    Typical lossy compression: 0.5–2.0 BPP.
-    """
+    # Calculates the Bits Per Pixel (BPP) metric for the compressed image.
     total_pixels = original_size  # grayscale: 1 byte per pixel
     roi_bits = max(1, dct_nonzero_count) * 16
     non_roi_bits = max(1, latent_size) * 8
@@ -126,7 +97,7 @@ def compute_all_metrics(
     latent_size: int,
     num_blocks: int,
 ) -> Dict[str, float]:
-    """Compute all evaluation metrics at once."""
+    # Aggregates all evaluation metrics into a single dictionary.
     psnr = compute_psnr(original, reconstructed)
     ssim = compute_ssim(original, reconstructed)
     cr = compute_compression_ratio(original.size, dct_nonzero_count, latent_size, num_blocks)

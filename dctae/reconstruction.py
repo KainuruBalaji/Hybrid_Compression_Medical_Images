@@ -1,4 +1,4 @@
-"""Module 8: Reconstruction Pipeline — full DCTAE pipeline combining all modules."""
+
 
 import os
 from pathlib import Path
@@ -36,30 +36,7 @@ def reconstruction_pipeline(
     sparsity_weight: float = 1e-4,
     output_dir: str = "outputs",
 ) -> Dict[str, object]:
-    """Run the full DCTAE hybrid compression pipeline.
-
-    Pipeline stages:
-        1. Load grayscale image and pad to block-aligned dimensions
-        2. Split into non-overlapping blocks
-        3. Compute Shannon entropy for each block
-        4. Find Otsu threshold on entropy values
-        5. Classify blocks: entropy > threshold → ROI, else → Non-ROI
-        6. Compress ROI blocks with DCT + JPEG quantization
-        7. Compress Non-ROI blocks with sparse autoencoder
-        8. Merge reconstructed blocks into final image
-        9. Evaluate metrics (PSNR, SSIM, CR, SS)
-        10. Save visualizations
-
-    Args:
-        image_path: path to input image
-        block_size: size of non-overlapping blocks (default 16)
-        latent_dim: autoencoder bottleneck dimension (default 32)
-        epochs: max training epochs for autoencoder (default 100)
-        batch_size: training batch size (default 16)
-        model_type: "dense" or "conv" autoencoder architecture
-        sparsity_weight: L1 regularization weight on latent layer
-        output_dir: directory for saved outputs
-    """
+    # Orchestrates the complete hybrid image compression pipeline, connecting all stages together.
     tf.keras.backend.clear_session()
     tf.keras.utils.set_random_seed(42)
 

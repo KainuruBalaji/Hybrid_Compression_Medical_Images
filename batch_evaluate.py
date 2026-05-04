@@ -1,4 +1,4 @@
-"""Batch evaluation — process all images in a directory and produce a CSV summary."""
+
 
 import argparse
 import csv
@@ -23,6 +23,7 @@ def batch_evaluate(
     model_type: str = "dense",
     output_dir: str = "batch_outputs",
 ) -> None:
+    # Processes an entire folder of images, computes metrics for each, and outputs a summary CSV.
     input_path = Path(input_dir)
     if not input_path.is_dir():
         raise NotADirectoryError(f"Not a directory: {input_dir}")
@@ -104,6 +105,7 @@ def batch_evaluate(
 
 
 def main() -> None:
+    # CLI entry point that handles arguments for batch processing.
     parser = argparse.ArgumentParser(description="Batch evaluate DCTAE on a folder of images")
     parser.add_argument("input_dir", help="Directory containing input images")
     parser.add_argument("--block-size", type=int, default=16)

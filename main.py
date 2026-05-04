@@ -1,4 +1,4 @@
-"""CLI entry point for the DCTAE hybrid image compression pipeline."""
+
 
 import argparse
 import os
@@ -12,6 +12,7 @@ from dctae import reconstruction_pipeline, create_example_image
 
 
 def main() -> None:
+    # CLI entry point that handles arguments and runs the pipeline for a single image.
     parser = argparse.ArgumentParser(
         description="DCTAE: Hybrid Image Compression Using DCT and Autoencoder"
     )

@@ -1,4 +1,4 @@
-"""Module 7: Visualization — comparison plots and entropy histogram."""
+
 
 from pathlib import Path
 
@@ -13,11 +13,7 @@ def plot_entropy_histogram(
     threshold: float,
     output_path: str,
 ) -> None:
-    """Plot histogram of block entropies with the Otsu threshold line.
-
-    This visualization shows the bimodal distribution of entropy values
-    and where Otsu's method splits ROI from Non-ROI blocks.
-    """
+    # Plots the distribution of block entropies and visualizes the Otsu threshold split.
     fig, ax = plt.subplots(figsize=(8, 5))
 
     roi_mask = entropies > threshold
@@ -54,7 +50,7 @@ def visualize_results(
     threshold: float,
     output_path: str,
 ) -> None:
-    """Save 4-panel visualization: original, ROI map, reconstructed, entropy histogram."""
+    # Generates a 4-panel figure comparing the original image, ROI map, reconstructed image, and entropy histogram.
     fig, axes = plt.subplots(2, 2, figsize=(14, 12))
 
     axes[0, 0].imshow(original, cmap="gray")
@@ -98,7 +94,7 @@ def visualize_simple(
     roi_map: np.ndarray,
     output_path: str,
 ) -> None:
-    """Save a simple 3-panel comparison (original, ROI map, reconstructed)."""
+    # Generates a simple 3-panel comparison figure.
     fig, axes = plt.subplots(1, 3, figsize=(15, 5))
     axes[0].imshow(original, cmap="gray")
     axes[0].set_title("Original")

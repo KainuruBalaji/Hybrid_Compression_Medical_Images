@@ -1,12 +1,4 @@
-"""Module 5: Autoencoder — improved dense + convolutional autoencoder for Non-ROI blocks.
 
-Loss function:
-    L = L_reconstruction + λ · L_sparsity
-    L = (1/N) Σ ||x - x̂||² + λ · Σ |a_j|
-
-The sparsity term (L1 regularization on latent activations) forces most latent
-units toward zero, producing a more compressible representation.
-"""
 
 from typing import Tuple
 
@@ -19,15 +11,7 @@ def build_dense_autoencoder(
     latent_dim: int = 32,
     sparsity_weight: float = 1e-4,
 ) -> Tuple[tf.keras.Model, tf.keras.Model, tf.keras.Model]:
-    """Build an improved deep sparse autoencoder for non-ROI blocks.
-
-    Architecture (deeper than original for better reconstruction):
-        Encoder: input_dim → 192 → 128 → 64 → latent_dim
-        Decoder: latent_dim → 64 → 128 → 192 → input_dim
-
-    Each hidden layer uses BatchNormalization for training stability
-    and Dropout for regularization.
-    """
+    # Builds an improved deep dense sparse autoencoder model for compressing smooth blocks.
     inputs = tf.keras.Input(shape=(input_dim,), name="input_block")
 
     x = tf.keras.layers.Dense(192, name="enc_dense1")(inputs)
@@ -86,14 +70,7 @@ def build_conv_autoencoder(
     latent_dim: int = 32,
     sparsity_weight: float = 1e-4,
 ) -> Tuple[tf.keras.Model, tf.keras.Model, tf.keras.Model]:
-    """Build a convolutional autoencoder for non-ROI blocks.
-
-    Architecture:
-        Encoder: (block_size, block_size, 1) → Conv(32) → Conv(64) → Flatten → latent_dim
-        Decoder: latent_dim → Dense → Reshape → ConvTranspose(64) → ConvTranspose(32) → (block_size, block_size, 1)
-
-    Convolutional layers better capture spatial patterns in image blocks.
-    """
+    # Builds a convolutional autoencoder model for compressing smooth blocks.
     spatial_dim = block_size // 4
 
     inputs = tf.keras.Input(shape=(block_size, block_size, 1), name="input_block")
@@ -152,7 +129,7 @@ def train_autoencoder(
     batch_size: int = 16,
     validation_split: float = 0.1,
 ) -> tf.keras.callbacks.History:
-    """Train autoencoder with early stopping to prevent overfitting."""
+    # Trains the autoencoder on Non-ROI blocks using early stopping to prevent overfitting.
     effective_batch = min(batch_size, max(1, len(train_data)))
 
     callbacks = []
@@ -186,12 +163,7 @@ def compress_blocks(
     block_size: int,
     model_type: str = "dense",
 ) -> Tuple[np.ndarray, np.ndarray]:
-    """Encode blocks to latent space and quantize to uint8.
-
-    Returns:
-        quantized_latent: uint8 quantized latent codes (compressed representation)
-        latent_codes: float32 raw latent codes
-    """
+    # Encodes blocks into a low-dimensional latent representation and quantizes them to 8-bit integers.
     if model_type == "dense":
         vectors = blocks.astype(np.float32).reshape(len(blocks), -1) / 255.0
     else:
@@ -208,7 +180,7 @@ def decompress_blocks(
     block_size: int,
     model_type: str = "dense",
 ) -> np.ndarray:
-    """Dequantize latent codes and decode back to image blocks."""
+    # Dequantizes latent codes and decodes them back to reconstructed image blocks.
     dequantized = quantized_latent.astype(np.float32) / 255.0
     reconstructed = decoder.predict(dequantized, verbose=0)
 
@@ -223,7 +195,7 @@ def prepare_training_data(
     block_size: int,
     model_type: str = "dense",
 ) -> np.ndarray:
-    """Normalize block data for autoencoder training."""
+    # Reshapes and normalizes block data before feeding it to the autoencoder for training.
     if model_type == "dense":
         return blocks.astype(np.float32).reshape(len(blocks), -1) / 255.0
     else:

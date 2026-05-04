@@ -1,4 +1,4 @@
-"""Module 1: Image Preprocessing — load, grayscale, pad, block division, merge."""
+
 
 from typing import Tuple
 
@@ -7,7 +7,7 @@ import numpy as np
 
 
 def create_example_image(output_path: str = "example_input.png", size: int = 256) -> np.ndarray:
-    """Create a simple MRI-like grayscale example image for the demo."""
+    # Generates a synthetic grayscale image for testing.
     image = np.full((size, size), 18, dtype=np.uint8)
     center = (size // 2, size // 2)
 
@@ -31,7 +31,7 @@ def create_example_image(output_path: str = "example_input.png", size: int = 256
 
 
 def load_grayscale_image(image_path: str) -> np.ndarray:
-    """Read an image and convert it to grayscale."""
+    # Reads an image file from disk and converts it to grayscale.
     image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
     if image is None:
         raise FileNotFoundError(f"Unable to read image: {image_path}")
@@ -39,7 +39,7 @@ def load_grayscale_image(image_path: str) -> np.ndarray:
 
 
 def pad_image_to_block_size(image: np.ndarray, block_size: int) -> Tuple[np.ndarray, Tuple[int, int]]:
-    """Pad image so dimensions are exact multiples of block_size."""
+    # Pads image dimensions with zeros to be exact multiples of the block size.
     height, width = image.shape
     padded_height = int(np.ceil(height / block_size) * block_size)
     padded_width = int(np.ceil(width / block_size) * block_size)
@@ -50,7 +50,7 @@ def pad_image_to_block_size(image: np.ndarray, block_size: int) -> Tuple[np.ndar
 
 
 def split_into_blocks(image: np.ndarray, block_size: int) -> np.ndarray:
-    """Split a padded image into non-overlapping blocks of size block_size×block_size."""
+    # Slices the padded image into non-overlapping blocks.
     blocks = []
     for row in range(0, image.shape[0], block_size):
         for col in range(0, image.shape[1], block_size):
@@ -59,7 +59,7 @@ def split_into_blocks(image: np.ndarray, block_size: int) -> np.ndarray:
 
 
 def merge_blocks(blocks: np.ndarray, image_shape: Tuple[int, int], block_size: int) -> np.ndarray:
-    """Merge reconstructed blocks back into a single image."""
+    # Reassembles processed blocks back into a complete image.
     height, width = image_shape
     reconstructed = np.zeros((height, width), dtype=np.float32)
 
