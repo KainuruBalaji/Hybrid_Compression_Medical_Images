@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# TensorFlow / ML
+*.h5
+*.keras
+*.pb
+checkpoint/
+logs/
+
+# Matplotlib cache
+.mplconfig/
+.cache/
+
+# Output directories (generated results — not needed in repo)
+outputs/
+outputs_cli_test/
+outputs_new/
+outputs_tiger/
+batch_outputs/
